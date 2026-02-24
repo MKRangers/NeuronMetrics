@@ -1,0 +1,28 @@
+# Build directory
+build/
+install/
+
+# Visual Studio
+.vs/
+*.vcxproj*
+*.sln
+*.user
+*.VC.db
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Compiled binaries
+*.exe
+*.lib
+*.dll
+*.pdb
+*.obj
+*.ilk
+
+# OS
+.DS_Store
+Thumbs.db
