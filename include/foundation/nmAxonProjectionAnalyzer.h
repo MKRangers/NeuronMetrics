@@ -24,9 +24,10 @@ namespace nm
 			void populateAxonSubregionMaps(Neuron& neuron);
 			void populateAxonTargetRegionMaps(Neuron& neuron);
 			void populateAxonTargetRegionLengths(Neuron& neuron);
-			//void populateAxonTargetRegionMapsHemisphere(Neuron& neuron);
 			
 			std::map<std::string, std::map<std::string, double>> mTargetReport;
+			std::map<std::string, std::map<std::string, double>> mTargetReport_R;
+			std::map<std::string, std::map<std::string, double>> mTargetReport_L;
 			void batchComputeTargetRegionLengths();
 			void batchComputeTargetRegionLengths_singleThread();
 

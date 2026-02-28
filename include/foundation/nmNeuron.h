@@ -31,9 +31,7 @@ namespace nm
 			std::unordered_map<int, std::vector<int>> mNodeID2childLocMap; // Node ID -> a vector of locations of its child nodes in mNodes
 
 			boost::container::flat_map<std::string, std::vector<int>>    mAxonSubregionNodeLocMap;     // region name -> vector of node locations in mNodes that are axon nodes in that region
-			//boost::container::flat_map<std::string, std::pair<int, int>> mAxonSubregionEndBifurMap;    // region name -> pair of (number of axon end nodes in that region, number of bifurcation nodes in that region)
 			boost::container::flat_map<std::string, std::vector<int>>    mAxonTargetRegionNodeLocMap;  // region name -> vector of node locations in mNodes that are axon nodes in that TARGET region
-			//boost::container::flat_map<std::string, std::pair<int, int>> mAxonParentRegionEndBifurMap; // region name -> pair of (number of axon end nodes in that PARENT region, number of bifurcation nodes in that PARENT region)
 			boost::container::flat_map<std::string, double>              mAxonTargetRegionLengthMap;   // region name -> axon length in that region
 
 			boost::container::flat_map<std::string, std::vector<int>>    mR_AxonSubregionNodeLocMap;       

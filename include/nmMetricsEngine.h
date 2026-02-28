@@ -1,8 +1,7 @@
 #ifndef nmMETRICSENGINE_H
 #define nmMETRICSENGINE_H
 
-#include "nmNeuron.h"
-#include "nmMouseCCF.h"
+#include "nmAxonProjectionAnalyzer.h"
 
 namespace nm
 {
@@ -13,12 +12,14 @@ namespace nm
 			MetricsEngine() = default;
 			~MetricsEngine() = default;
 
-			void getSWCFilePathsFromDirectory(const std::string& directoryPath);
+			void setSWCFilesDirectory(const std::string& directoryPath);
+			void setTargetRegionList();
+			void outputAxonTargetReport(const std::string& outputFolder, const std::string& fileBaseName);
 
 
 		private:
-			std::vector<std::string> SWCFilePaths;
-			
+			AxonProjectionAnalyzer mAxonProjAnalyzer;
+			boost::container::flat_set<std::string> mTargetList;
 	};
 
 }

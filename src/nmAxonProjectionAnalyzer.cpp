@@ -46,8 +46,12 @@ namespace nm
 			populateAxonTargetRegionLengths(neuron);
 
 			lock_guard<mutex> lock(mReportMutex);
-			for (auto& paRegion : neuron.mAxonTargetRegionLengthMap)
-				mTargetReport[neuron.getNeuronName()][paRegion.first] = paRegion.second;
+			for (auto& taRegion : neuron.mAxonTargetRegionLengthMap)
+				mTargetReport[neuron.getNeuronName()][taRegion.first] = taRegion.second;
+			for (auto& taRegion : neuron.mL_AxonTargetRegionLengthMap)
+				mTargetReport_L[neuron.getNeuronName()][taRegion.first] = taRegion.second;
+			for (auto& taRegion : neuron.mR_AxonTargetRegionLengthMap)
+				mTargetReport_R[neuron.getNeuronName()][taRegion.first] = taRegion.second;
 		}
 	}
 
@@ -63,13 +67,20 @@ namespace nm
 				if (!regionName.compare("Out of bounds") || !regionName.compare("Unknown region"))
 					continue;
 				neuron.mAxonSubregionNodeLocMap[regionName].push_back(i);
-				//if (neuron.mNodeID2childLocMap.find(node.getID()) == neuron.mNodeID2childLocMap.end())
-				//	neuron.mAxonSubregionEndBifurMap[regionName].first++; // Increment end node count
-				//else if (neuron.mNodeID2childLocMap[node.getID()].size() > 1)
-				//	neuron.mAxonSubregionEndBifurMap[regionName].second++; // Increment bifurcation node count
 			}
 		}
 		//cout << neuron.getNeuronName() << ": " << neuron.mAxonSubregionNodeLocMap.size() << endl;
+
+		for (auto& subRegion : neuron.mAxonSubregionNodeLocMap)
+		{
+			for (auto& loc : subRegion.second)
+			{
+				if (nodes[loc].getZ() < CCF_MIDDLE_25TH)
+					neuron.mL_AxonSubregionNodeLocMap[subRegion.first].push_back(loc);
+				else if (nodes[loc].getZ() > CCF_MIDDLE_25TH)
+					neuron.mR_AxonSubregionNodeLocMap[subRegion.first].push_back(loc);
+			}
+		}
 	}
 
 	void AxonProjectionAnalyzer::populateAxonTargetRegionMaps(Neuron& neuron)
@@ -86,8 +97,6 @@ namespace nm
 				if (mTargetList.find(paName) != mTargetList.end())
 				{
 					neuron.mAxonTargetRegionNodeLocMap[paName].insert(neuron.mAxonTargetRegionNodeLocMap[paName].end(), it.second.begin(), it.second.end());
-					//neuron.mAxonTargetRegionEndBifurMap[paName].first += neuron.mAxonSubregionEndBifurMap[it.first].first;
-					//neuron.mAxonTargetRegionEndBifurMap[paName].second += neuron.mAxonSubregionEndBifurMap[it.first].second;
 					break;
 				}
 				paName = mCCF.getParentRegionName(paName);
@@ -97,6 +106,18 @@ namespace nm
 		for (auto& paName : neuron.mAxonTargetRegionNodeLocMap)
 			cout << paName.first << " ";
 		cout << endl;*/
+
+		const vector<Node>& nodes = neuron.getNodes();
+		for (auto& target : neuron.mAxonTargetRegionNodeLocMap)
+		{
+			for (auto& loc : target.second)
+			{
+				if (nodes[loc].getZ() < CCF_MIDDLE_25TH)
+					neuron.mL_AxonTargetRegionNodeLocMap[target.first].push_back(loc);
+				else if (nodes[loc].getZ() > CCF_MIDDLE_25TH)
+					neuron.mR_AxonTargetRegionNodeLocMap[target.first].push_back(loc);
+			}
+		}
 	}
 
 	void AxonProjectionAnalyzer::populateAxonTargetRegionLengths(Neuron& neuron)
@@ -116,16 +137,29 @@ namespace nm
 		for (auto& paName : neuron.mAxonTargetRegionLengthMap)
 			cout << paName.first << ":" << paName.second << " ";
 		cout << endl;*/
+
+		cout << neuron.getNeuronName() << endl;
+		for (auto& region : neuron.mL_AxonTargetRegionNodeLocMap)
+		{
+			vector<const Node*> nodes;
+			for (auto& loc : region.second)
+				nodes.push_back(&neuron.getNodes().at(loc));
+			double length = nm::getNodesLength(nodes) * 25;
+			neuron.mL_AxonTargetRegionLengthMap[region.first] = length;
+			cout << region.first << "_L:" << neuron.mL_AxonTargetRegionLengthMap[region.first] << " ";
+		}
+		cout << endl;
+		for (auto& region : neuron.mR_AxonTargetRegionNodeLocMap)
+		{
+			vector<const Node*> nodes;
+			for (auto& loc : region.second)
+				nodes.push_back(&neuron.getNodes().at(loc));
+			double length = nm::getNodesLength(nodes) * 25;
+			neuron.mR_AxonTargetRegionLengthMap[region.first] = length;
+			cout << region.first << "_R:" << neuron.mR_AxonTargetRegionLengthMap[region.first] << " ";
+		}
+		cout << endl;
 	}
-
-	/*void AxonProjectionAnalyzer::populateAxonTargetRegionMapsHemisphere(Neuron& neuron)
-	{
-		if (neuron.mAxonSubregionNodeLocMap.empty())
-			populateAxonSubregionMaps(neuron);
-		
-
-
-	}*/
 
 	void AxonProjectionAnalyzer::batchComputeTargetRegionLengths_singleThread()
 	{

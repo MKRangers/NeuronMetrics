@@ -43,15 +43,15 @@ int main()
 	clock_t endTime2 = clock();
 	cout << float(endTime2 - startTime2) / CLOCKS_PER_SEC << " seconds" << endl;*/
 
-	nm::AxonProjectionAnalyzer analyzer;
-	analyzer.getSWCFilePathsFromDirectory("D:\\Allen Institute Work\\Connectome_refinement\\_SWC_DATASET\\2873Cells_SWCfiles\\");
-	analyzer.setTargetList(targetRegionsWithLayerNums);
-	clock_t time1 = clock();
-	analyzer.batchComputeTargetRegionLengths();
-	//analyzer.computeParentRegionLengths_singleThread();
-	clock_t time2 = clock();
-	cout << float(time2 - time1) / CLOCKS_PER_SEC << " seconds" << endl;
-	for (auto& neuronName : analyzer.mTargetReport)
+	//nm::AxonProjectionAnalyzer analyzer;
+	//analyzer.getSWCFilePathsFromDirectory("D:\\Allen Institute Work\\Connectome_refinement\\_SWC_DATASET\\2873Cells_SWCfiles\\");
+	//analyzer.setTargetList(targetRegionsWithLayerNums);
+	//clock_t time1 = clock();
+	//analyzer.batchComputeTargetRegionLengths();
+	////analyzer.computeParentRegionLengths_singleThread();
+	//clock_t time2 = clock();
+	//cout << float(time2 - time1) / CLOCKS_PER_SEC << " seconds" << endl;
+	/*for (auto& neuronName : analyzer.mTargetReport)
 	{
 		cout << neuronName.first << endl << "  ";
 		for (auto& regionName : neuronName.second)
@@ -59,10 +59,16 @@ int main()
 			cout << regionName.first << ":" << regionName.second << " ";
 		}
 		cout << endl;
-	}
+	}*/
 	//cout << analyzer.getParentRegionName("MOs5") << endl;
 
-
+	clock_t timeStart = clock();
+	nm::MetricsEngine engine;
+	engine.setSWCFilesDirectory("D:\\Allen Institute Work\\Connectome_refinement\\_SWC_DATASET\\2873Cells_SWCfiles\\");
+	engine.setTargetRegionList();
+	engine.outputAxonTargetReport("C:\\Users\\hkuo9\\Desktop\\", "targetReport");
+	clock_t timeEnd = clock();
+	cout << float(timeEnd - timeStart) / CLOCKS_PER_SEC << " seconds" << endl;
 
 	system("pause");
 
