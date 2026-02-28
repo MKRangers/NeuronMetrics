@@ -1,5 +1,6 @@
 #include "nmNeuron.h"
 #include "nmExceptions.h"
+#include "nmUtilities.h"
 
 #include <boost\algorithm\string.hpp>
 
@@ -27,7 +28,7 @@ namespace nm
         vector<string> pathItems;
         boost::split(pathItems, mFilePath, boost::is_any_of("\\"));
         mName = pathItems.back();
-        cout << "Reading SWC file: " << mName << " - ";
+        //cout << "Reading SWC file: " << mName << " - ";
 
         string testLine;
         bool isSpaceSeparated = false;
@@ -45,6 +46,7 @@ namespace nm
             }
         }
 
+        mNodes.clear();
         file.clear();
         file.seekg(0, ios::beg); // Reset file stream to the beginning
         string line;
@@ -73,11 +75,14 @@ namespace nm
             }
         }
 
-        cout << mNodes.size() << " nodes read." << endl;
+        //cout << mNodes.size() << " nodes read." << endl;
     }
 
     void Neuron::populateNodeMaps()
     {
+		// Tip nodes won't be in mNodeID2childLocMap, but that's fine since we only use that map to find children of a node, and tip nodes don't have children
+		// If mNodeID2childLocMap cannot find a node ID, it means that node is a tip node and we can handle that case accordingly in the code that uses the map
+
         mNodeID2LocMap.clear();
         mNodeID2childLocMap.clear();
         mNodeID2LocMap.reserve(mNodes.size());
@@ -92,7 +97,7 @@ namespace nm
         }
     }
 
-    void Neuron::scaleNeuron(double scaleFactor)
+    void Neuron::scale(double scaleFactor)
     {
         for (Node& node : mNodes)
             node = Node(node.getX() * scaleFactor, node.getY() * scaleFactor, node.getZ() * scaleFactor, node.getID(), node.getParentID(), node.getType(), node.getRadius());

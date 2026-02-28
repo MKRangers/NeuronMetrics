@@ -3,8 +3,6 @@
 
 namespace nm
 {
-	enum NodeType { ntSoma, ntAxon, ntBasalDendrite, ntApicalDendrite, ntUndefined };
-
 
 	class Node
 	{

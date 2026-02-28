@@ -12,18 +12,25 @@ add_library(NeuronMetrics STATIC
     src/nmNode.cpp
     src/nmSegment.cpp
     src/nmMouseCCF.cpp
+    src/nmMetricsEngine.cpp
+    src/nmAxonProjectionAnalyzer.cpp
+    src/nmUtilities.cpp
 
-    include/nmNeuron.h
-    include/nmNode.h
-    include/nmSegment.h
-    include/nmMouseCCF.h
-    include/nmExceptions.h
+    include/foundation/nmNeuron.h
+    include/foundation/nmNode.h
+    include/foundation/nmSegment.h
+    include/foundation/nmMouseCCF.h
+    include/foundation/nmExceptions.h
+    include/foundation/nmAxonProjectionAnalyzer.h
+    include/nmMetricsEngine.h
+    include/nmUtilities.h
 )
 
 # Include directories for the library
 target_include_directories(NeuronMetrics 
     PUBLIC # Expose the include directory to users of the library
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/foundation
 )
 
 # Find Boost libraries (if needed for the project)
