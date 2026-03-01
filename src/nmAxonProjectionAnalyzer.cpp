@@ -128,7 +128,7 @@ namespace nm
 		for (auto& region : neuron.mAxonTargetRegionNodeLocMap)
 		{
 			vector<const Node*> nodes;
-			for (auto& loc : region.second)
+			for (auto& loc : region.second) // loc: location on Neuron.mNodes
 				nodes.push_back(&neuron.getNodes().at(loc));
 			double length = nm::getNodesLength(nodes) * 25;
 			neuron.mAxonTargetRegionLengthMap[region.first] = length;
@@ -142,7 +142,7 @@ namespace nm
 		for (auto& region : neuron.mL_AxonTargetRegionNodeLocMap)
 		{
 			vector<const Node*> nodes;
-			for (auto& loc : region.second)
+			for (auto& loc : region.second) // loc: locations on Neuron.mNodes
 				nodes.push_back(&neuron.getNodes().at(loc));
 			double length = nm::getNodesLength(nodes) * 25;
 			neuron.mL_AxonTargetRegionLengthMap[region.first] = length;
@@ -152,7 +152,7 @@ namespace nm
 		for (auto& region : neuron.mR_AxonTargetRegionNodeLocMap)
 		{
 			vector<const Node*> nodes;
-			for (auto& loc : region.second)
+			for (auto& loc : region.second) // loc: locations on Neuron.mNodes
 				nodes.push_back(&neuron.getNodes().at(loc));
 			double length = nm::getNodesLength(nodes) * 25;
 			neuron.mR_AxonTargetRegionLengthMap[region.first] = length;

@@ -7,7 +7,7 @@ using namespace std;
 namespace nm
 {
 
-	void populateNodeID2locChildLocMaps(vector<const Node*> nodes, std::unordered_map<int, int>& nodeID2LocMap, std::unordered_map<int, std::vector<int>>& nodeID2childLocMap)
+	void populateNodeID2locChildLocMaps(const vector<const Node*> nodes, std::unordered_map<int, int>& nodeID2LocMap, std::unordered_map<int, std::vector<int>>& nodeID2childLocMap)
 	{
 		nodeID2LocMap.clear();
 		nodeID2childLocMap.clear();
@@ -23,7 +23,7 @@ namespace nm
 		}
 	}
 
-	double getNodesLength(vector<const Node*> nodes)
+	double getNodesLength(const vector<const Node*> nodes)
 	{
 		unordered_map<int, int> nodeID2LocMap;
 		unordered_map<int, std::vector<int>> nodeID2childLocMap;
@@ -32,6 +32,7 @@ namespace nm
 		double totalLength = 0;
 		for (auto& node : nodeID2childLocMap)
 		{
+			// [nodes] is most likely cut out from a region. Some nodes' parent nodes may not be in [nodes] because they're in different regions.
 			if (nodeID2LocMap.find(node.first) != nodeID2LocMap.end())
 			{
 				const Node* paNode = nodes.at(nodeID2LocMap.at(node.first));
@@ -48,4 +49,9 @@ namespace nm
 
 		return totalLength;
 	}
+
+	/*vector<vector<int>> getSpikes(const vector<const Node*> nodes, unordered_map<int, int>& nodeID2LocMap, unordered_map<int, std::vector<int>>& nodeID2childLocMap)
+	{
+		nm::populateNodeID2locChildLocMaps(nodes, nodeID2LocMap, nodeID2childLocMap);
+	}*/
 }
