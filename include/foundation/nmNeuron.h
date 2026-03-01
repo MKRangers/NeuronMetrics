@@ -27,19 +27,27 @@ namespace nm
 			int						 getNodesNum() const { return mNodes.size(); }
 
 			void populateNodeMaps();  // Call this after mNodes is populated to fill the maps for quick access
-			std::unordered_map<int, int>			  mNodeID2LocMap;      // Node ID -> its location in mNodes
-			std::unordered_map<int, std::vector<int>> mNodeID2childLocMap; // Node ID -> a vector of locations of its child nodes in mNodes
+			//std::unordered_map<int, int>			  mNodeID2LocMap;      // Node ID -> its location in mNodes
+			//std::unordered_map<int, std::vector<int>> mNodeID2childLocMap; // Node ID -> a vector of locations of its child nodes in mNodes
+			std::unordered_map<int, const Node*> mNodeIDMap;
+			std::unordered_map<int, std::vector<const Node*>> mNodeID2childMap;
 
-			boost::container::flat_map<std::string, std::vector<int>> mAxonSubregionNodeLocMap;     // region name -> vector of node locations in mNodes that are axon nodes in that region
-			boost::container::flat_map<std::string, std::vector<int>> mAxonTargetRegionNodeLocMap;  // region name -> vector of node locations in mNodes that are axon nodes in that TARGET region
+			//boost::container::flat_map<std::string, std::vector<int>> mAxonSubregionNodeLocMap;     // region name -> vector of node locations in mNodes that are axon nodes in that region
+			boost::container::flat_map<std::string, std::vector<const Node*>> mAxonSubregionNodeMap;
+			//boost::container::flat_map<std::string, std::vector<int>> mAxonTargetRegionNodeLocMap;  // region name -> vector of node locations in mNodes that are axon nodes in that TARGET region
+			boost::container::flat_map<std::string, std::vector<const Node*>> mAxonTargetRegionNodeMap;
 			boost::container::flat_map<std::string, double>           mAxonTargetRegionLengthMap;   // region name -> axon length in that region
 
-			boost::container::flat_map<std::string, std::vector<int>> mR_AxonSubregionNodeLocMap;       
-			boost::container::flat_map<std::string, std::vector<int>> mR_AxonTargetRegionNodeLocMap;
+			//boost::container::flat_map<std::string, std::vector<int>> mR_AxonSubregionNodeLocMap;
+			boost::container::flat_map<std::string, std::vector<const Node*>> mR_AxonSubregionNodeMap;
+			//boost::container::flat_map<std::string, std::vector<int>> mR_AxonTargetRegionNodeLocMap;
+			boost::container::flat_map<std::string, std::vector<const Node*>> mR_AxonTargetRegionNodeMap;
 			boost::container::flat_map<std::string, double>           mR_AxonTargetRegionLengthMap;
 
-			boost::container::flat_map<std::string, std::vector<int>> mL_AxonSubregionNodeLocMap;        
-			boost::container::flat_map<std::string, std::vector<int>> mL_AxonTargetRegionNodeLocMap;
+			//boost::container::flat_map<std::string, std::vector<int>> mL_AxonSubregionNodeLocMap;
+			boost::container::flat_map<std::string, std::vector<const Node*>> mL_AxonSubregionNodeMap;       
+			//boost::container::flat_map<std::string, std::vector<int>> mL_AxonTargetRegionNodeLocMap;
+			boost::container::flat_map<std::string, std::vector<const Node*>> mL_AxonTargetRegionNodeMap;
 			boost::container::flat_map<std::string, double>           mL_AxonTargetRegionLengthMap;
 
 

@@ -83,17 +83,27 @@ namespace nm
 		// Tip nodes won't be in mNodeID2childLocMap, but that's fine since we only use that map to find children of a node, and tip nodes don't have children
 		// If mNodeID2childLocMap cannot find a node ID, it means that node is a tip node and we can handle that case accordingly in the code that uses the map
 
-        mNodeID2LocMap.clear();
-        mNodeID2childLocMap.clear();
-        mNodeID2LocMap.reserve(mNodes.size());
-        mNodeID2childLocMap.reserve(mNodes.size());
+        //mNodeID2LocMap.clear();
+        //mNodeID2childLocMap.clear();
+        //mNodeID2LocMap.reserve(mNodes.size());
+        //mNodeID2childLocMap.reserve(mNodes.size());
+        mNodeIDMap.clear();
+        mNodeID2childMap.clear();
+        mNodeIDMap.reserve(mNodes.size());
+        mNodeID2childMap.reserve(mNodes.size());
 
-        for (int i = 0; i < mNodes.size(); ++i)
+        /*for (int i = 0; i < mNodes.size(); ++i)
         {
 		    const Node& node = mNodes[i];
             mNodeID2LocMap.emplace(node.getID(), i);
             if (node.getParentID() != -1)
                 mNodeID2childLocMap[node.getParentID()].push_back(i);
+        }*/
+        for (vector<Node>::const_iterator it = mNodes.begin(); it != mNodes.end(); ++it)
+        {
+            mNodeIDMap.emplace(it->getID(), &*it);
+            if (it->getParentID() != -1)
+                mNodeID2childMap[it->getParentID()].push_back(&*it);
         }
     }
 
