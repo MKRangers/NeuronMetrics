@@ -14,10 +14,13 @@
 namespace nm
 {
 
+	const double CCF_MIDDLE_25TH = 228;
+	const double CCF_MIDDLE = 5700;
+
 	class MouseCCF
 	{
 		public:
-			MouseCCF();
+			MouseCCF(const std::string& CCFPath, const std::string& MouseCSVPath);
 			~MouseCCF() = default;
 			MouseCCF(const MouseCCF&) = delete;
 			MouseCCF& operator=(const MouseCCF&) = delete;
@@ -39,9 +42,8 @@ namespace nm
 
 
 		private:
-			const std::string CCFPath = "D:\\NeuronMetrics\\CCF\\annotation_25_float32.tif";
-			const std::string intensityRegionMappingFilePath = "D:\\NeuronMetrics\\CCF\\intensityValue2regionName.txt";
-			const std::string mouseRegionHierarchyFilePath = "D:\\NeuronMetrics\\CCF\\Mouse.csv";
+			const std::string mCCFPath;
+			const std::string mMouseRegionHierarchyFilePath;
 
 			std::vector<float> mData; // 1D vector to store the 3D image data
 			int mWidth;
@@ -57,7 +59,7 @@ namespace nm
 				std::vector<Region*> children;
 			};
 
-			void constructRegionMaps();
+			void constructRegionMaps(const std::string& mouseRegionHierarchyFilePath);
 			boost::container::flat_map<int, std::string> mIntensity2RegionMap; // Intensity value -> brain region name
 			boost::container::flat_map<std::string, std::unique_ptr<Region>> mRegionMap; // Maps region name to its node in the hierarchy
 	};

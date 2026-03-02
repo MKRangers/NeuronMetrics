@@ -3,13 +3,8 @@
 
 #include "nmNeuron.h"
 
-#include <vector>
-#include <unordered_map>
-
 namespace nm
 {
-	const double CCF_MIDDLE_25TH = 228;
-	const double CCF_MIDDLE = 5700;
 
 	//!
 	//! Populates input references of nodeIDMap and nodeID2childMap based on input nodes

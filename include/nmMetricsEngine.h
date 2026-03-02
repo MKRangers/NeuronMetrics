@@ -9,7 +9,7 @@ namespace nm
 	class MetricsEngine
 	{
 		public:
-			MetricsEngine() = default;
+			MetricsEngine(const std::string& CCFPath, const std::string& MouseCSVPath) : mAxonProjAnalyzer(CCFPath, MouseCSVPath) {}
 			~MetricsEngine() = default;
 
 			void setSWCFilesDirectory(const std::string& directoryPath);

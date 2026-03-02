@@ -15,7 +15,7 @@ namespace nm
 	class AxonProjectionAnalyzer
 	{
 		public:
-			AxonProjectionAnalyzer() = default;
+			AxonProjectionAnalyzer(const std::string& CCFPath, const std::string& MouseCSVPath) : mCCF(CCFPath, MouseCSVPath) {}
 			~AxonProjectionAnalyzer() = default;
 
 			void getSWCFilePathsFromDirectory(const std::string& directoryPath);

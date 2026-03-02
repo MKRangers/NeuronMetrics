@@ -24,6 +24,7 @@ add_library(NeuronMetrics STATIC
     include/foundation/nmAxonProjectionAnalyzer.h
     include/nmMetricsEngine.h
     include/nmUtilities.h
+    include/nmConstants.h
 )
 
 # Include directories for the library

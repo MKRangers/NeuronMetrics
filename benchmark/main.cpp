@@ -63,7 +63,7 @@ int main()
 	//cout << analyzer.getParentRegionName("MOs5") << endl;
 
 	clock_t timeStart = clock();
-	nm::MetricsEngine engine;
+	nm::MetricsEngine engine("D:\\NeuronMetrics\\CCF\\annotation_25_float32.tif", "D:\\NeuronMetrics\\CCF\\Mouse.csv");
 	engine.setSWCFilesDirectory("D:\\Allen Institute Work\\Connectome_refinement\\_SWC_DATASET\\2873Cells_SWCfiles\\");
 	engine.setTargetRegionList();
 	engine.outputAxonTargetReport("C:\\Users\\hkuo9\\Desktop\\", "targetReport");

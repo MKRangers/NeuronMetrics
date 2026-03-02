@@ -13,10 +13,10 @@ using namespace std;
 namespace nm
 {
 
-	MouseCCF::MouseCCF()
+	MouseCCF::MouseCCF(const string& CCFPath, const string& MouseCSVPath) : mCCFPath(CCFPath), mMouseRegionHierarchyFilePath(MouseCSVPath)
 	{
 		readTIFFFile(CCFPath);
-		constructRegionMaps();
+		constructRegionMaps(MouseCSVPath);
 	}
 
 	void MouseCCF::readTIFFFile(const std::string& filePath)
@@ -64,7 +64,7 @@ namespace nm
 		TIFFClose(tif);
 	}
 
-	void MouseCCF::constructRegionMaps()
+	void MouseCCF::constructRegionMaps(const string& mouseRegionHierarchyFilePath)
 	{
 		ifstream file(mouseRegionHierarchyFilePath);
 		if (!file)
