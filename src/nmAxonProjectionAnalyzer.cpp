@@ -244,6 +244,13 @@ namespace nm
 			populateAxonSubregionMaps(neuron);
 			populateAxonTargetRegionMaps(neuron);
 			populateAxonTargetRegionLengths(neuron);
+
+			for (auto& taRegion : neuron.mAxonTargetRegionLengthMap)
+				mTargetReport[neuron.getNeuronName()][taRegion.first] = taRegion.second;
+			for (auto& taRegion : neuron.mL_AxonTargetRegionLengthMap)
+				mTargetReport_L[neuron.getNeuronName()][taRegion.first] = taRegion.second;
+			for (auto& taRegion : neuron.mR_AxonTargetRegionLengthMap)
+				mTargetReport_R[neuron.getNeuronName()][taRegion.first] = taRegion.second;
 		}
 	}
 

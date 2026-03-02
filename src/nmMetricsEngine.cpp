@@ -19,7 +19,7 @@ namespace nm
 		mTargetList = targetRegionsWithLayerNums;
 	}
 
-	void MetricsEngine::outputAxonTargetReport(const string& outputFolder, const string& fileBaseName)
+	void MetricsEngine::outputAxonTargetReport(const string& outputFolder, const string& fileBaseName, bool multiThread)
 	{
 		string outputRTargetFileName = outputFolder + "\\" + fileBaseName + "_R.csv";
 		string outputLTargetFileName = outputFolder + "\\" + fileBaseName + "_L.csv";
@@ -36,7 +36,10 @@ namespace nm
 		outFileR << endl;
 		outFileL << endl;
 
-		mAxonProjAnalyzer.batchComputeTargetRegionLengths();
+		if (multiThread)
+			mAxonProjAnalyzer.batchComputeTargetRegionLengths();
+		else
+			mAxonProjAnalyzer.batchComputeTargetRegionLengths_singleThread();
 
 		for (auto& cell : mAxonProjAnalyzer.mTargetReport_R)
 		{

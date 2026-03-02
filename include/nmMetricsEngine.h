@@ -14,7 +14,7 @@ namespace nm
 
 			void setSWCFilesDirectory(const std::string& directoryPath);
 			void setTargetRegionList();
-			void outputAxonTargetReport(const std::string& outputFolder, const std::string& fileBaseName);
+			void outputAxonTargetReport(const std::string& outputFolder, const std::string& fileBaseName, bool multiThread = true);
 
 
 		private:
