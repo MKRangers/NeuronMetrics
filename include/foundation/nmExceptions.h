@@ -8,27 +8,33 @@
 namespace nm
 {
 
-class NM_Exception : public std::exception
-{
-	public:
-				NM_Exception(const std::string& msg) : mMessage(msg) {}
-				NM_Exception(const std::stringstream& msg) : mMessage(msg.str()) {}
+	class NM_Exception : public std::exception
+	{
+		public:
+					NM_Exception(const std::string& msg) : mMessage(msg) {}
+					NM_Exception(const std::stringstream& msg) : mMessage(msg.str()) {}
 
-		virtual	~NM_Exception() noexcept = default;
+			virtual	~NM_Exception() noexcept = default;
 		
-		virtual const char* what() const noexcept { return mMessage.c_str(); }
+			virtual const char* what() const noexcept { return mMessage.c_str(); }
 
 
-	protected:
-		std::string			mMessage;
-};
+		protected:
+			std::string			mMessage;
+	};
 
-class FileNotFoundException : public NM_Exception
-{
-	public:
-		FileNotFoundException(const std::string& filePath) : NM_Exception("File not found: " + filePath) {}
-		FileNotFoundException(const std::stringstream& msg) : NM_Exception(msg) {}
-};
+	class FileNotFoundException : public NM_Exception
+	{
+		public:
+			FileNotFoundException(const std::string& filePath) : NM_Exception("File not found: " + filePath) {}
+			FileNotFoundException(const std::stringstream& msg) : NM_Exception(msg) {}
+	};
+
+	class NeuronNodeMapsHaveNoDataException : NM_Exception
+	{
+		public:
+			NeuronNodeMapsHaveNoDataException(const std::stringstream& msg) : NM_Exception(msg) {}
+	};
 
 }
 

@@ -20,6 +20,8 @@ namespace nm
 
 			void getSWCFilePathsFromDirectory(const std::string& directoryPath);
 			void setTargetList(boost::container::flat_set<std::string> targetList) { mTargetList = targetList; }
+			void setRemoveSpikes(bool removeSpikes) { mRemoveSpikes = removeSpikes; }
+			void setSpikeLengthThreshold(double length) { mSpikeLengthThreshold = length; }
 
 			void populateAxonSubregionMaps(Neuron& neuron);
 			void populateAxonTargetRegionMaps(Neuron& neuron);
@@ -37,6 +39,14 @@ namespace nm
 
 
 		private:
+			bool   mRemoveSpikes = true;
+			double mSpikeLengthThreshold = 20;
+			double mMajorTargetLengthThreshold = 1000;
+			int    mMajorTargetBifurCount = 0;
+			int	   mMajorTargetEndCount = 1;
+			int	   mMinorTargetBifurCount = 1;
+			int    mMinorTargetEndCount = 1;
+
 			MouseCCF mCCF;
 
 			std::vector<std::string> mSWCFilePaths;
@@ -44,6 +54,8 @@ namespace nm
 			
 			std::mutex mReportMutex;
 			void targetRegionLengthWorker(std::atomic<size_t>& nextFileIndex);
+
+			std::pair<bool, double> isTarget(const std::vector<const Node*> nodes, std::unordered_map<int, std::vector<const Node*>>& nodeID2childMap);
 	};
 
 }
