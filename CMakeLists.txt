@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(NeuronMetrics VERSION 0.1.0 LANGUAGES CXX)
+project(NeuronMetrics VERSION 1.0.0 LANGUAGES CXX)
 
 # Use modern C++ standards
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(BUILD_CONSOLE "Build NeuronMetrics CON" ON)
 
 # Create static library target
 add_library(NeuronMetrics STATIC
@@ -24,7 +26,6 @@ add_library(NeuronMetrics STATIC
     include/foundation/nmAxonProjectionAnalyzer.h
     include/nmMetricsEngine.h
     include/nmUtilities.h
-    include/nmConstants.h
 )
 
 # Include directories for the library
@@ -64,3 +65,17 @@ add_subdirectory(benchmark)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/install
     CACHE PATH "Installation directory" FORCE
 )
+
+#if(MSVC)
+#    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#endif()
+
+if(BUILD_CONSOLE)
+    add_executable(nmConsole
+        apps/nmConsole/main.cpp
+    )
+
+    target_link_libraries(nmConsole
+        PRIVATE NeuronMetrics
+    )
+endif()

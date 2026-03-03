@@ -1,7 +1,9 @@
 #include "nmMetricsEngine.h"
+#include "nmExceptions.h"
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 using namespace std;
 
@@ -10,19 +12,45 @@ namespace nm
 
 	void MetricsEngine::setSWCFilesDirectory(const string& directoryPath)
 	{
+		if (!(filesystem::exists(directoryPath) && filesystem::is_directory(directoryPath)))
+			throw runtime_error("Invalid SWC files directory: " + directoryPath);
 		mAxonProjAnalyzer.getSWCFilePathsFromDirectory(directoryPath);
 	}
 
-	void MetricsEngine::setTargetRegionList()
+	void MetricsEngine::setTargetRegionList(const string& targetRegionListFile)
 	{
-		mAxonProjAnalyzer.setTargetList(targetRegionsWithLayerNums);
-		mTargetList = targetRegionsWithLayerNums;
+		if (!targetRegionListFile.empty())
+		{
+			ifstream inFile(targetRegionListFile);
+			if (!inFile)
+				throw FileNotFoundException(targetRegionListFile);
+
+			boost::container::flat_set<string> targetRegions;
+			string line;
+			while (getline(inFile, line))
+			{
+				if (!line.empty())
+					targetRegions.insert(line);
+			}
+			inFile.close();
+			mAxonProjAnalyzer.setTargetList(targetRegions);
+			mTargetList = targetRegions;
+			return;
+		}
+		else
+		{
+			mAxonProjAnalyzer.setTargetList(targetRegionsWithLayerNums);
+			mTargetList = targetRegionsWithLayerNums;
+		}
 	}
 
-	void MetricsEngine::outputAxonTargetReport(const string& outputFolder, const string& fileBaseName, bool multiThread)
+	void MetricsEngine::outputAxonTargetReport(const string& outputFolder, bool multiThread)
 	{
-		string outputRTargetFileName = outputFolder + "\\" + fileBaseName + "_R.csv";
-		string outputLTargetFileName = outputFolder + "\\" + fileBaseName + "_L.csv";
+		if (!(filesystem::exists(outputFolder) && filesystem::is_directory(outputFolder)))
+			filesystem::create_directories(outputFolder);
+
+		string outputRTargetFileName = outputFolder + "\\targetReport_R.csv";
+		string outputLTargetFileName = outputFolder + "\\targetReport_L.csv";
 		ofstream outFileR(outputRTargetFileName);
 		ofstream outFileL(outputLTargetFileName);
 
@@ -36,7 +64,7 @@ namespace nm
 		outFileR << endl;
 		outFileL << endl;
 
-		if (multiThread)
+		if (multiThread && thread::hardware_concurrency() > 0)
 			mAxonProjAnalyzer.batchComputeTargetRegionLengths();
 		else
 			mAxonProjAnalyzer.batchComputeTargetRegionLengths_singleThread();

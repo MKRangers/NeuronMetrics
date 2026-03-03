@@ -54,6 +54,16 @@ namespace nm
 				mTargetReport_L[neuron.getNeuronName()][taRegion.first] = taRegion.second;
 			for (auto& taRegion : neuron.mR_AxonTargetRegionLengthMap)
 				mTargetReport_R[neuron.getNeuronName()][taRegion.first] = taRegion.second;
+
+			for (auto& targetRegion : mTargetList)
+			{
+				if (neuron.mAxonTargetRegionLengthMap.find(targetRegion) == neuron.mAxonTargetRegionLengthMap.end())
+					mTargetReport[neuron.getNeuronName()][targetRegion] = 0;
+				if (neuron.mL_AxonTargetRegionLengthMap.find(targetRegion) == neuron.mL_AxonTargetRegionLengthMap.end())
+					mTargetReport_L[neuron.getNeuronName()][targetRegion] = 0;
+				if (neuron.mR_AxonTargetRegionLengthMap.find(targetRegion) == neuron.mR_AxonTargetRegionLengthMap.end())
+					mTargetReport_R[neuron.getNeuronName()][targetRegion] = 0;
+			}
 		}
 	}
 
@@ -178,6 +188,8 @@ namespace nm
 				neuron.mL_AxonTargetRegionLengthMap[region.first] = cluster.second;
 				cout << region.first << "_L:" << neuron.mL_AxonTargetRegionLengthMap[region.first] << " ";
 			}
+			else
+				neuron.mL_AxonTargetRegionLengthMap[region.first] = 0;
 		}
 		cout << endl;
 		for (auto& region : neuron.mR_AxonTargetRegionNodeMap)
@@ -189,6 +201,8 @@ namespace nm
 				neuron.mR_AxonTargetRegionLengthMap[region.first] = cluster.second;
 				cout << region.first << "_R:" << neuron.mR_AxonTargetRegionLengthMap[region.first] << " ";
 			}
+			else
+				neuron.mR_AxonTargetRegionLengthMap[region.first] = 0;
 		}
 		cout << endl;
 	}

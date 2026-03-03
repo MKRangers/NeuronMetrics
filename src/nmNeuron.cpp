@@ -20,7 +20,7 @@ namespace nm
 
     void Neuron::readSWCFile(const std::string& filePath)
     {
-        std::ifstream file(filePath);
+        ifstream file(filePath);
         if (!file)
             throw FileNotFoundException(filePath);
         mFilePath = filePath;

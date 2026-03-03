@@ -13,8 +13,8 @@ namespace nm
 			~MetricsEngine() = default;
 
 			void setSWCFilesDirectory(const std::string& directoryPath);
-			void setTargetRegionList();
-			void outputAxonTargetReport(const std::string& outputFolder, const std::string& fileBaseName, bool multiThread = true);
+			void setTargetRegionList(const std::string& targetRegionListFile = "");
+			void outputAxonTargetReport(const std::string& outputFolder, bool multiThread = true);
 
 
 		private:

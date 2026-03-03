@@ -19,11 +19,11 @@ namespace nm
 		constructRegionMaps(MouseCSVPath);
 	}
 
-	void MouseCCF::readTIFFFile(const std::string& filePath)
+	void MouseCCF::readTIFFFile(const string& filePath)
 	{
 		TIFF* tif = TIFFOpen(filePath.c_str(), "r");
 		if (!tif)
-			throw std::runtime_error("Failed to open TIFF " + filePath);
+			throw runtime_error("Failed to open TIFF " + filePath);
 
 		uint32 w, h;
 		uint16 bitsPerSample, sampleFormat;
@@ -35,7 +35,7 @@ namespace nm
 		if (bitsPerSample != 32 || sampleFormat != SAMPLEFORMAT_IEEEFP)
 		{
 			TIFFClose(tif);
-			throw std::runtime_error("Expected CCF to be float32");
+			throw runtime_error("Expected CCF to be float32");
 		}
 		mWidth = static_cast<int>(w);
 		mHeight = static_cast<int>(h);
