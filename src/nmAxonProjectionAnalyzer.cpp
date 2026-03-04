@@ -184,12 +184,10 @@ namespace nm
 			//double length = nm::getNodesLength(region.second) * 25;
 			pair<bool, double> cluster = isTarget(region.second, neuron.mNodeID2childMap);
 			if (cluster.first)
-			{
 				neuron.mL_AxonTargetRegionLengthMap[region.first] = cluster.second;
-				cout << region.first << "_L:" << neuron.mL_AxonTargetRegionLengthMap[region.first] << " ";
-			}
 			else
 				neuron.mL_AxonTargetRegionLengthMap[region.first] = 0;
+			cout << region.first << "_L:" << neuron.mL_AxonTargetRegionLengthMap[region.first] << " ";
 		}
 		cout << endl;
 		for (auto& region : neuron.mR_AxonTargetRegionNodeMap)
@@ -197,12 +195,10 @@ namespace nm
 			//double length = nm::getNodesLength(region.second) * 25;
 			pair<bool, double> cluster = isTarget(region.second, neuron.mNodeID2childMap);
 			if (cluster.first)
-			{
 				neuron.mR_AxonTargetRegionLengthMap[region.first] = cluster.second;
-				cout << region.first << "_R:" << neuron.mR_AxonTargetRegionLengthMap[region.first] << " ";
-			}
 			else
 				neuron.mR_AxonTargetRegionLengthMap[region.first] = 0;
+			cout << region.first << "_R:" << neuron.mR_AxonTargetRegionLengthMap[region.first] << " ";
 		}
 		cout << endl;
 	}

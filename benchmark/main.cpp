@@ -14,10 +14,10 @@ int main()
 	engine.setTargetRegionList();
 	
 	// Multi-thread
-	clock_t timeStart = clock();
+	/*clock_t timeStart = clock();
 	engine.outputAxonTargetReport("C:\\Users\\hkuo9\\Desktop\\");
 	clock_t timeEnd = clock();
-	cout << float(timeEnd - timeStart) / CLOCKS_PER_SEC << " seconds" << endl;
+	cout << float(timeEnd - timeStart) / CLOCKS_PER_SEC << " seconds" << endl;*/
 
 	// Single thread
 	clock_t timeStart2 = clock();

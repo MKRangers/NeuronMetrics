@@ -40,8 +40,8 @@ int main(int sz, char* args[])
 	{
 		string currPath = getExecutablePath().string();
 		cout << "Current executable path: " << currPath << endl;
-		string ccfPath = currPath + "\\..\\..\\CCF\\annotation_25_float32.tif";
-		string mouseCSVPath = currPath + "\\..\\..\\CCF\\Mouse.csv";
+		string ccfPath = currPath + "\\CCF\\annotation_25_float32.tif";
+		string mouseCSVPath = currPath + "\\CCF\\Mouse.csv";
 		if (!std::filesystem::exists(ccfPath))
 			throw std::runtime_error("CCF not found.");
 		if (!std::filesystem::exists(mouseCSVPath))

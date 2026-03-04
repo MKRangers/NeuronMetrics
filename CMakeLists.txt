@@ -36,13 +36,13 @@ target_include_directories(NeuronMetrics
 )
 
 # Find Boost libraries (if needed for the project)
-set(BOOST_ROOT "D:/boostLibs/boost_1_80_0_msvc143/" CACHE PATH "Boost root")
+#set(BOOST_ROOT "D:/boostLibs/boost_1_80_0_msvc143/" CACHE PATH "Boost root")
 find_package(Boost 1.80 REQUIRED)
 
 # Find TIFF library
-set(TIFF_INCLUDE_DIR "D:/tiff-4.4.0/include" CACHE PATH "TIFF include directory")
-set(TIFF_LIBRARY_RELEASE "D:/tiff-4.4.0/lib/tiff.lib" CACHE FILEPATH "TIFF release library")
-set(TIFF_LIBRARY_DEBUG "D:/tiff-4.4.0/lib/tiffd.lib" CACHE FILEPATH "TIFF debug library")
+#set(TIFF_INCLUDE_DIR "D:/tiff-4.4.0/include" CACHE PATH "TIFF include directory")
+#set(TIFF_LIBRARY_RELEASE "D:/tiff-4.4.0/lib/tiff.lib" CACHE FILEPATH "TIFF release library")
+#set(TIFF_LIBRARY_DEBUG "D:/tiff-4.4.0/lib/tiffd.lib" CACHE FILEPATH "TIFF debug library")
 find_package(TIFF REQUIRED)
 
 # Include directories for TIFF
