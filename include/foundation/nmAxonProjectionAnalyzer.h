@@ -55,7 +55,7 @@ namespace nm
 			std::mutex mReportMutex;
 			void targetRegionLengthWorker(std::atomic<size_t>& nextFileIndex);
 
-			std::pair<bool, double> isTarget(const std::vector<const Node*> nodes, std::unordered_map<int, std::vector<const Node*>>& nodeID2childMap);
+			std::pair<bool, double> isTarget(const std::vector<const Node*>& nodes, std::unordered_map<int, std::vector<const Node*>>& nodeID2childMap);
 	};
 
 }

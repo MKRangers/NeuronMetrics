@@ -203,7 +203,7 @@ namespace nm
 		cout << endl;
 	}
 
-	pair<bool, double> AxonProjectionAnalyzer::isTarget(const vector<const Node*> nodes, unordered_map<int, vector<const Node*>>& nodeID2childMap)
+	pair<bool, double> AxonProjectionAnalyzer::isTarget(const vector<const Node*>& nodes, unordered_map<int, vector<const Node*>>& nodeID2childMap)
 	{
 		int majorBifurCount = 0, majorEndCount = 0, minorBifurCount = 0, minorEndCount = 0;
 		double length = nm::getNodesLength(nodes) * 25;
