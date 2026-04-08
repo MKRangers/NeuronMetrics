@@ -12,11 +12,18 @@ using namespace std;
 namespace nm
 {
 
-    Neuron::Neuron(const string& filePath)
+    Neuron::Neuron(const string& filePath, bool populateMap)
     {
         readSWCFile(filePath);
-        populateNodeMaps();
+		if (populateMap)
+			populateNodeMaps();
     }
+
+    Neuron::Neuron(const vector<Node>& nodes, bool populateMap) : mNodes(nodes)
+    {
+		if (populateMap)
+            populateNodeMaps();
+	}
 
     void Neuron::readSWCFile(const std::string& filePath)
     {
@@ -77,10 +84,26 @@ namespace nm
         //cout << mNodes.size() << " nodes read." << endl;
     }
 
+    void Neuron::writeSWCFile(const string& filePath) const
+    {
+        ofstream file(filePath);
+        if (!file)
+            throw FileNotFoundException(filePath);
+        for (const Node& node : mNodes)
+            file << node.getID() << " " << node.getType() << " " << node.getX() << " " << node.getY() << " " << node.getZ() << " " << node.getRadius() << " " << node.getParentID() << endl;
+        file.close();
+	}
+
     void Neuron::populateNodeMaps()
     {
 		// Tip nodes won't be in mNodeID2childLocMap, but that's fine since we only use that map to find children of a node, and tip nodes don't have children
 		// If mNodeID2childLocMap cannot find a node ID, it means that node is a tip node and we can handle that case accordingly in the code that uses the map
+
+        if (mNodes.empty())
+        {
+            stringstream s("No nodes in neuron.");
+            throw NeuronHasNoNodesException(s);
+		}
 
         mNodeIDMap.clear();
         mNodeID2childMap.clear();

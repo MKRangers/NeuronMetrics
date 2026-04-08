@@ -26,8 +26,11 @@ namespace nm
 		size_t numThreads = thread::hardware_concurrency();
 		vector<thread> workers;
 
+		// Each worker thread will fetch the next file index atomically and process that file until all files are processed
+		// C++ note: '&' is needed to make &AxonProjectionAnalyzer::targetRegionLengthWorker a pointer to member function.
+		// Non-static member functions require [function pointer + instance]
 		for (size_t t = 0; t < numThreads; ++t)
-			workers.emplace_back(&AxonProjectionAnalyzer::targetRegionLengthWorker, this, ref(nextFileIndex));
+			workers.emplace_back(&AxonProjectionAnalyzer::targetRegionLengthWorker, this, ref(nextFileIndex)); 
 		
 		for (auto& worker : workers)
 			worker.join();
@@ -99,6 +102,9 @@ namespace nm
 			for (auto& spike : spikeNodes)
 			{
 				unordered_set<const Node*> toRemove(spike.begin(), spike.end());
+				// [remove_if] returns the new end iterator after "removing" the elements that satisfy the condition, and we need to call erase to actually remove those elements from the vector.
+				// The 3rd argument of remove_if is a lambda function that checks if a node is in the toRemove set, and if it is, it will be "removed" (moved to the end of the vector).
+				// For [remove_if], the 3rd argument must be a callable that behaves like [bool predicate(const T& element);].
 				nodes.erase(remove_if(nodes.begin(), nodes.end(), [&](const Node* node) { return toRemove.count(node) > 0; }), nodes.end());
 			}
 

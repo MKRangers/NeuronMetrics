@@ -30,7 +30,13 @@ namespace nm
 			FileNotFoundException(const std::stringstream& msg) : NM_Exception(msg) {}
 	};
 
-	class NeuronNodeMapsHaveNoDataException : NM_Exception
+	class NeuronHasNoNodesException : public NM_Exception
+	{
+		public:
+			NeuronHasNoNodesException(const std::stringstream& msg) : NM_Exception(msg) {}
+	};
+
+	class NeuronNodeMapsHaveNoDataException : public NM_Exception
 	{
 		public:
 			NeuronNodeMapsHaveNoDataException(const std::stringstream& msg) : NM_Exception(msg) {}

@@ -16,11 +16,12 @@ namespace nm
 	{
 		public:
 			Neuron() = default;
-			Neuron(const std::string& filePath);
-			Neuron(const std::vector<Node>& nodes) : mNodes(nodes) { populateNodeMaps(); }
+			Neuron(const std::string& filePath, bool populateMap = true);
+			Neuron(const std::vector<Node>& nodes, bool populateMap = true);
 			~Neuron() = default;
 
 			void					 readSWCFile(const std::string& filePath);
+			void					 writeSWCFile(const std::string& filePath) const;
 			void					 scale(double scaleFactor);
 			std::string				 getNeuronName() const { return mName; }	
 			const std::vector<Node>& getNodes() const { return mNodes; }

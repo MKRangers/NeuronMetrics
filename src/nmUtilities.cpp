@@ -3,11 +3,23 @@
 
 #include <iostream>
 #include <map>
+#include <unordered_set>
 
 using namespace std;
 
 namespace nm
 {
+
+	int getNodeIDMax(const vector<Node>& nodes)
+	{
+		int maxID = -1;
+		for (auto& node : nodes)
+		{
+			if (node.getID() > maxID)
+				maxID = node.getID();
+		}
+		return maxID;
+	}
 
 	void populateMaps(const vector<const Node*> nodes, unordered_map<int, const Node*>& nodeIDMap, unordered_map<int, vector<const Node*>>& nodeID2childMap)
 	{
@@ -29,7 +41,7 @@ namespace nm
 	{
 		if (nodeIDMap.empty() || nodeID2childMap.empty())
 		{
-			stringstream s("No data in node maps.");
+			stringstream s("No data in input node maps.");
 			throw NeuronNodeMapsHaveNoDataException(s);
 		}
 
@@ -73,7 +85,7 @@ namespace nm
 	{
 		if (neuron.mNodeIDMap.empty() || neuron.mNodeID2childMap.empty())
 		{
-			stringstream s("No data in node maps.");
+			stringstream s("No data in node maps of input neuron.");
 			throw NeuronNodeMapsHaveNoDataException(s);
 		}
 	
@@ -126,4 +138,63 @@ namespace nm
 
 		return outputSpikes;
 	}
+
+	vector<Node> interpolateNodes(Neuron& neuron, double interval)
+	{
+		vector<Node> outputNodes;
+		if (neuron.mNodeIDMap.empty() || neuron.mNodeID2childMap.empty())
+		{
+			try
+			{
+				neuron.populateNodeMaps();
+			}
+			catch (const NeuronHasNoNodesException& e)
+			{
+				cout << e.what() << " No nodes in neuron to interpolate.";
+				return outputNodes;
+			}
+		}
+
+		const vector<Node>& nodes = neuron.getNodes();
+		int idMax = nm::getNodeIDMax(nodes);
+		unordered_set<int> visitedIDs;
+		for (auto& it : neuron.mNodeID2childMap)
+		{
+			const Node* paNode = neuron.mNodeIDMap.at(it.first);
+			if (visitedIDs.find(paNode->getID()) == visitedIDs.end())
+			{
+				outputNodes.push_back(*paNode);
+				visitedIDs.insert(paNode->getID());
+			}
+
+			for (auto& childNode : it.second)
+			{
+				double dist = sqrt((paNode->getX() - childNode->getX()) * (paNode->getX() - childNode->getX()) +
+								   (paNode->getY() - childNode->getY()) * (paNode->getY() - childNode->getY()) +
+								   (paNode->getZ() - childNode->getZ()) * (paNode->getZ() - childNode->getZ()));
+				if (dist > interval)
+				{
+					int numNodesToInsert = static_cast<int>(floor(dist) / interval);
+					double xStep = (childNode->getX() - paNode->getX()) / (numNodesToInsert + 1);
+					double yStep = (childNode->getY() - paNode->getY()) / (numNodesToInsert + 1);
+					double zStep = (childNode->getZ() - paNode->getZ()) / (numNodesToInsert + 1);
+					for (int i = 1; i <= numNodesToInsert; ++i)
+					{
+						if (i == 1)
+							outputNodes.emplace_back(paNode->getX() + i * xStep, paNode->getY() + i * yStep, paNode->getZ() + i * zStep, ++idMax, it.first, childNode->getType(), childNode->getRadius());
+						else
+							outputNodes.emplace_back(paNode->getX() + i * xStep, paNode->getY() + i * yStep, paNode->getZ() + i * zStep, ++idMax, outputNodes.back().getID(), childNode->getType(), childNode->getRadius());
+					}
+					outputNodes.emplace_back(childNode->getX(), childNode->getY(), childNode->getZ(), childNode->getID(), outputNodes.back().getID(), childNode->getType(), childNode->getRadius());
+				}
+				else
+					outputNodes.push_back(*childNode);
+				
+				visitedIDs.insert(childNode->getID());
+			}
+		}
+
+		return outputNodes;
+	}
+
 }
