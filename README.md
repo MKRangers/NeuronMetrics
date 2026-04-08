@@ -1,4 +1,4 @@
-# NeuronMetrics
+# NeuronMetrics (DOI: 10.5281/zenodo.19260178)
 
 NeuronMetrics is a high-performance C++ framework for large-scale axon projection analysis using mouse brain atlas (CCF) mapping.
 
