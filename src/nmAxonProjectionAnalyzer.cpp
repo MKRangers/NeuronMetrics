@@ -188,7 +188,7 @@ namespace nm
 		for (auto& region : neuron.mL_AxonTargetRegionNodeMap)
 		{
 			//double length = nm::getNodesLength(region.second) * 25;
-			pair<bool, double> cluster = isTarget(region.second, neuron.mNodeID2childMap);
+			pair<bool, double> cluster = isTarget(region.second, neuron.mNodeID2ChildMap);
 			if (cluster.first)
 				neuron.mL_AxonTargetRegionLengthMap[region.first] = cluster.second;
 			else
@@ -199,7 +199,7 @@ namespace nm
 		for (auto& region : neuron.mR_AxonTargetRegionNodeMap)
 		{
 			//double length = nm::getNodesLength(region.second) * 25;
-			pair<bool, double> cluster = isTarget(region.second, neuron.mNodeID2childMap);
+			pair<bool, double> cluster = isTarget(region.second, neuron.mNodeID2ChildMap);
 			if (cluster.first)
 				neuron.mR_AxonTargetRegionLengthMap[region.first] = cluster.second;
 			else

@@ -83,20 +83,20 @@ namespace nm
 
 	vector<vector<const Node*>> getSpikeNodes(const Neuron& neuron, double spikeLengthThreshold)
 	{
-		if (neuron.mNodeIDMap.empty() || neuron.mNodeID2childMap.empty())
+		if (neuron.mNodeIDMap.empty() || neuron.mNodeID2ChildMap.empty())
 		{
 			stringstream s("No data in node maps of input neuron.");
 			throw NeuronNodeMapsHaveNoDataException(s);
 		}
 	
 		map<int, pair<vector<const Node*>, double>> spikeMap;
-		vector<const Node*> tipNodes = nm::getTipNodes(neuron.getNodes(), neuron.mNodeIDMap, neuron.mNodeID2childMap);
+		vector<const Node*> tipNodes = nm::getTipNodes(neuron.getNodes(), neuron.mNodeIDMap, neuron.mNodeID2ChildMap);
 		for (auto& tipNode : tipNodes)
 		{
 			vector<const Node*> spikeNodes = { tipNode };
 			const Node* currNode = tipNode;
 			const Node* paNode = neuron.mNodeIDMap.at(currNode->getParentID());
-			while (neuron.mNodeID2childMap.at(paNode->getID()).size() == 1)
+			while (neuron.mNodeID2ChildMap.at(paNode->getID()).size() == 1)
 			{
 				currNode = paNode;
 				spikeNodes.push_back(currNode);
@@ -142,7 +142,7 @@ namespace nm
 	vector<Node> interpolateNodes(Neuron& neuron, double interval)
 	{
 		vector<Node> outputNodes;
-		if (neuron.mNodeIDMap.empty() || neuron.mNodeID2childMap.empty())
+		if (neuron.mNodeIDMap.empty() || neuron.mNodeID2ChildMap.empty())
 		{
 			try
 			{
@@ -155,18 +155,15 @@ namespace nm
 			}
 		}
 
-		const vector<Node>& nodes = neuron.getNodes();
-		int idMax = nm::getNodeIDMax(nodes);
-		unordered_set<int> visitedIDs;
-		for (auto& it : neuron.mNodeID2childMap)
+		unordered_map<int, int> id2NewPaIDMap; // old parent node ID -> new parent node ID after interpolation, used for updating parent IDs of child nodes after new nodes are inserted between the old parent and child nodes
+		unordered_map<int, size_t> paNodeLocMap;
+		vector<const Node*> tipNodes = nm::getTipNodes(neuron.getNodes(), neuron.mNodeIDMap, neuron.mNodeID2ChildMap);
+		int idMax = nm::getNodeIDMax(neuron.getNodes());
+		for (auto& it : neuron.mNodeID2ChildMap)
 		{
 			const Node* paNode = neuron.mNodeIDMap.at(it.first);
-			if (visitedIDs.find(paNode->getID()) == visitedIDs.end())
-			{
-				outputNodes.push_back(*paNode);
-				visitedIDs.insert(paNode->getID());
-			}
-
+			outputNodes.push_back(*paNode);
+			paNodeLocMap[paNode->getID()] = outputNodes.size() - 1;
 			for (auto& childNode : it.second)
 			{
 				double dist = sqrt((paNode->getX() - childNode->getX()) * (paNode->getX() - childNode->getX()) +
@@ -174,23 +171,31 @@ namespace nm
 								   (paNode->getZ() - childNode->getZ()) * (paNode->getZ() - childNode->getZ()));
 				if (dist > interval)
 				{
-					int numNodesToInsert = static_cast<int>(floor(dist) / interval);
+					int numNodesToInsert = static_cast<int>(floor(dist / interval));
+					numNodesToInsert = (static_cast<int>(dist) % static_cast<int>(interval) == 0) ? --numNodesToInsert : numNodesToInsert; // if the distance is an exact multiple of the interval, we need to insert one less node
 					double xStep = (childNode->getX() - paNode->getX()) / (numNodesToInsert + 1);
 					double yStep = (childNode->getY() - paNode->getY()) / (numNodesToInsert + 1);
 					double zStep = (childNode->getZ() - paNode->getZ()) / (numNodesToInsert + 1);
+					int prevID = paNode->getID();
 					for (int i = 1; i <= numNodesToInsert; ++i)
 					{
-						if (i == 1)
-							outputNodes.emplace_back(paNode->getX() + i * xStep, paNode->getY() + i * yStep, paNode->getZ() + i * zStep, ++idMax, it.first, childNode->getType(), childNode->getRadius());
-						else
-							outputNodes.emplace_back(paNode->getX() + i * xStep, paNode->getY() + i * yStep, paNode->getZ() + i * zStep, ++idMax, outputNodes.back().getID(), childNode->getType(), childNode->getRadius());
+						outputNodes.emplace_back(paNode->getX() + i * xStep, paNode->getY() + i * yStep, paNode->getZ() + i * zStep, ++idMax, prevID, childNode->getType());
+						prevID = outputNodes.back().getID();
 					}
-					outputNodes.emplace_back(childNode->getX(), childNode->getY(), childNode->getZ(), childNode->getID(), outputNodes.back().getID(), childNode->getType(), childNode->getRadius());
+					id2NewPaIDMap[childNode->getID()] = prevID;
+
+					// If the child node is a tip node, we need to update its parent ID to the last new node inserted between the old parent and child nodes. 
+					if (find(tipNodes.begin(), tipNodes.end(), childNode) != tipNodes.end())
+						outputNodes.emplace_back(childNode->getX(), childNode->getY(), childNode->getZ(), childNode->getID(), prevID, childNode->getType());
 				}
-				else
-					outputNodes.push_back(*childNode);
-				
-				visitedIDs.insert(childNode->getID());
+			}
+		}
+
+		for (auto& it : id2NewPaIDMap)
+		{
+			if (paNodeLocMap.find(it.first) != paNodeLocMap.end())
+			{
+				outputNodes[paNodeLocMap[it.first]].setParentID(it.second);
 			}
 		}
 

@@ -8,7 +8,6 @@
 namespace nm
 {
 
-
 	class Segment
 	{
 		public:
@@ -16,10 +15,9 @@ namespace nm
 			Segment(const std::vector<Node>& nodes) : mNodes(nodes) {}
 			~Segment() = default;
 
-			std::vector<Node>		mNodes;
 
-
-	
+		private:
+			std::vector<Node>		mNodes;	
 	};
 
 }

@@ -106,15 +106,15 @@ namespace nm
 		}
 
         mNodeIDMap.clear();
-        mNodeID2childMap.clear();
+        mNodeID2ChildMap.clear();
         mNodeIDMap.reserve(mNodes.size());
-        mNodeID2childMap.reserve(mNodes.size());
+        mNodeID2ChildMap.reserve(mNodes.size());
 
         for (vector<Node>::const_iterator it = mNodes.begin(); it != mNodes.end(); ++it)
         {
             mNodeIDMap.emplace(it->getID(), &*it);
             if (it->getParentID() != -1)
-                mNodeID2childMap[it->getParentID()].push_back(&*it);
+                mNodeID2ChildMap[it->getParentID()].push_back(&*it);
         }
     }
 
@@ -123,5 +123,102 @@ namespace nm
         for (Node& node : mNodes)
             node = Node(node.getX() * scaleFactor, node.getY() * scaleFactor, node.getZ() * scaleFactor, node.getID(), node.getParentID(), node.getType(), node.getRadius());
     }
+
+    void Neuron::writeSegmentsToSWC(const string& filePath) const
+    {
+        ofstream file(filePath);
+        if (!file)
+            throw FileNotFoundException(filePath);
+        
+        for (const Segment& seg : mSegments)
+        {
+            for (const Node* node : seg.nodes)
+                file << node->getID() << " " << node->getType() << " " << node->getX() << " " << node->getY() << " " << node->getZ() << " " << node->getRadius() << " " << node->getParentID() << endl;
+        }
+        file.close();
+    }
+
+    void Neuron::populateSegments()
+    {
+        if (mNodes.empty())
+        {
+            stringstream s("No nodes in neuron.");
+            throw NeuronHasNoNodesException(s);
+        }
+
+        if (mNodeID2ChildMap.empty())
+			populateNodeMaps();
+
+        mSegments.clear();
+        int segmentID = 0;
+        for (const Node& node : mNodes)
+        {
+            // if it's a tip node or a bifurcation point
+            if (mNodeID2ChildMap.find(node.getID()) == mNodeID2ChildMap.end() || mNodeID2ChildMap.at(node.getID()).size() > 1) 
+            {
+				Segment segment = buildSegmentFromNode(node);
+                segment.id = segmentID++;
+                mSegments.push_back(segment);
+            }
+        }
+
+        // Set parent and child segments
+        populateSegmentMaps();
+        for (Segment& segment : mSegments)
+        {
+			const Node* headNode = segment.nodes.front();
+            if (headNode->getParentID() != -1)
+            {
+				vector<Segment*> segmentsSharingSameNode = mNodeID2SegmentMap.at(headNode->getID());
+                for (Segment* candidateParentSegment : segmentsSharingSameNode)
+                {
+                    if (candidateParentSegment->nodes.back()->getID() == headNode->getID())
+                    {
+                        segment.parentSegment = candidateParentSegment;
+                        candidateParentSegment->childSegments.push_back(&segment);
+                        break;
+                    }
+				}
+            }
+		}
+    }
+
+    Neuron::Segment Neuron::buildSegmentFromNode(const Node& node)
+    {
+        Segment segment;
+        const Node* currentNode = &node;
+		segment.nodes.push_back(const_cast<Node*>(currentNode)); // const_cast is needed because the nodes in mSegments need to be non-const, but the nodes in mNodes are const when accessed through mNodeIDMap
+        if (mNodeID2ChildMap.find(currentNode->getID()) == mNodeID2ChildMap.end())
+            currentNode = mNodeIDMap.at(currentNode->getParentID());
+        while (currentNode)
+        {
+            segment.nodes.push_back(const_cast<Node*>(currentNode));
+            if (currentNode->getParentID() == -1 || mNodeID2ChildMap.at(currentNode->getID()).size() > 1) // if the parent node is a bifurcation point or the root node
+                break;
+            currentNode = mNodeIDMap.at(currentNode->getParentID());
+        }
+        reverse(segment.nodes.begin(), segment.nodes.end()); // reverse the segment so that the first node is the head and the last node is the tail
+        return segment;
+	}
+
+    void Neuron::populateSegmentMaps()
+    {
+        if (mSegments.empty())
+        {
+            stringstream s("No segments in neuron.");
+            throw NeuronHasNoSegmentsException(s);
+        }
+
+        mNodeID2SegmentMap.clear();
+        mNodeID2SegmentMap.reserve(mSegments.size());
+        for (Segment& segment : mSegments)
+        {
+            for (Node* node : segment.nodes)
+            {
+                if (!mNodeID2SegmentMap.insert({ node->getID(), {&segment} }).second)
+					mNodeID2SegmentMap[node->getID()].push_back(&segment);
+            }
+        }
+	}
 
 }

@@ -42,6 +42,12 @@ namespace nm
 			NeuronNodeMapsHaveNoDataException(const std::stringstream& msg) : NM_Exception(msg) {}
 	};
 
+	class NeuronHasNoSegmentsException : public NM_Exception
+	{
+		public:
+			NeuronHasNoSegmentsException(const std::stringstream& msg) : NM_Exception(msg) {}
+	};
+
 }
 
 #endif

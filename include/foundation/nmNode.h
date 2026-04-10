@@ -8,7 +8,7 @@ namespace nm
 	{
 		public:
 			Node() = default;
-			Node(double x, double y, double z, int id = 0, int parentID = -1, int type = 5, double radius = 1) : x(x), y(y), z(z), id(id), parentID(parentID), type(type), radius(radius) {}
+			Node(double x, double y, double z, int id = 0, int parentID = -1, int type = 5, double radius = 1) : x(x), y(y), z(z), id(id), parentID(parentID), type(type), radius(radius), segID(-1) {}
 			~Node() = default;
 
 			const bool	operator==(const Node& rhsNode) const;
@@ -21,6 +21,8 @@ namespace nm
 			int	   getType() const { return type; }
 			int	   getParentID() const { return parentID; }
 			double getRadius() const { return radius; }
+			void   setParentID(int parentID) { this->parentID = parentID; }
+			int    segID;
 
 
 		private:

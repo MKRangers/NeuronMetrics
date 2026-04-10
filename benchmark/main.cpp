@@ -30,10 +30,20 @@ int main()
 	// ----------------- Test code for nmMetricsEngine -- --------------- //
 
 	// ------------------ Test code for nmUtilities -- --------------- //
-	nm::Neuron n1("D:\\Allen Institute Work\\Connectome_refinement\\_SWC_DATASET\\2873Cells_SWCfiles\\17781_4710-X13766-Y10574_reg_xy25z25_xy0z0.swc");
+	nm::Neuron n1("C:\\Users\\hkuo9\\Desktop\\220332_4623-X12025-Y17498_reg_xy25z25_xy0z0.swc");
+	n1.populateSegments();
+	cout << "n1 segments number: " << n1.mSegments.size() << endl;
 	vector<nm::Node> interpolatedNodes = nm::interpolateNodes(n1);
 	nm::Neuron n2(interpolatedNodes, false);
-	n2.writeSWCFile("C:\\Users\\hkuo9\\Desktop\\16124_2801-X11376-Y11451_reg_xy25z25_xy0z0_interpolated.swc");
+	n2.writeSWCFile("C:\\Users\\hkuo9\\Desktop\\220332_4623-X12025-Y17498_reg_xy25z25_xy0z0_interpolated.swc");
+	n2.populateSegments();
+	n2.writeSegmentsToSWC("C:\\Users\\hkuo9\\Desktop\\220332_4623-X12025-Y17498_reg_xy25z25_xy0z0_interpolated_segments.swc");
+	cout << "Segments number: " << n2.mSegments.size() << endl;
+	int segNodesNumSum = 0;
+	for (auto& seg : n2.mSegments)
+		segNodesNumSum += seg.nodes.size();
+	cout << "Sum of nodes in all segments: " << segNodesNumSum << endl;
+	cout << "Original nodes number: " << n2.getNodesNum() << endl;
 	// ------------------ Test code for nmUtilities -- --------------- //
 
 	system("pause");
