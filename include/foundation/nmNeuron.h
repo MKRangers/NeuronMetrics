@@ -54,6 +54,13 @@ namespace nm
 				std::vector<Segment*> childSegments; // child segments that branch out from the end of this segment
 				
 				Node* operator[](size_t index) { return nodes[index]; }
+				Node* front() { return nodes.front(); }
+				Node* back() { return nodes.back(); }
+				void pop_front() { nodes.pop_back(); }
+				void pop_back() { nodes.erase(nodes.begin()); }
+				void push_front(Node* node) { nodes.insert(nodes.begin(), node); }
+				void push_back(Node* node) { nodes.push_back(node); }
+				//Segment split(size_t index);
 			};
 
 			void populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
