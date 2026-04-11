@@ -151,14 +151,16 @@ namespace nm
 
         mSegments.clear();
         int segmentID = 0;
-        for (const Node& node : mNodes)
+        for (auto& it : mNodeID2ChildMap)
         {
-            // if it's a tip node or a bifurcation point
-            if (mNodeID2ChildMap.find(node.getID()) == mNodeID2ChildMap.end() || mNodeID2ChildMap.at(node.getID()).size() > 1) 
+            if (it.second.size() > 1 || mNodeIDMap.at(it.first)->getParentID() == -1)
             {
-				Segment segment = buildSegmentFromNode(node);
-                segment.id = segmentID++;
-                mSegments.push_back(segment);
+                vector<Segment> segments = buildSegmentFromNode(*mNodeIDMap.at(it.first));
+                for (Segment& segment : segments)
+                {
+                    segment.id = segmentID++;
+                    mSegments.push_back(segment);
+                }
             }
         }
 
@@ -183,22 +185,26 @@ namespace nm
 		}
     }
 
-    Neuron::Segment Neuron::buildSegmentFromNode(const Node& node)
+    vector<Neuron::Segment> Neuron::buildSegmentFromNode(const Node& node)
     {
-        Segment segment;
-        const Node* currentNode = &node;
-		segment.nodes.push_back(const_cast<Node*>(currentNode)); // const_cast is needed because the nodes in mSegments need to be non-const, but the nodes in mNodes are const when accessed through mNodeIDMap
-        if (mNodeID2ChildMap.find(currentNode->getID()) == mNodeID2ChildMap.end())
-            currentNode = mNodeIDMap.at(currentNode->getParentID());
-        while (currentNode)
+		vector<Segment> segments;
+        const Node* inputNode = &node;
+        for (auto& childNode : mNodeID2ChildMap.at(inputNode->getID()))
         {
-            segment.nodes.push_back(const_cast<Node*>(currentNode));
-            if (currentNode->getParentID() == -1 || mNodeID2ChildMap.at(currentNode->getID()).size() > 1) // if the parent node is a bifurcation point or the root node
-                break;
-            currentNode = mNodeIDMap.at(currentNode->getParentID());
+            Segment segment;
+			segment.nodes.push_back(const_cast<Node*>(inputNode)); // const_cast is needed because the nodes in mSegments need to be non-const, but the nodes in mNodes are const when accessed through mNodeIDMap
+
+			const Node* currentNode = childNode;
+            while (currentNode)
+            {
+                segment.nodes.push_back(const_cast<Node*>(currentNode)); // const_cast is needed because the nodes in mSegments need to be non-const, but the nodes in mNodes are const when accessed through mNodeIDMap
+                if (mNodeID2ChildMap.find(currentNode->getID()) == mNodeID2ChildMap.end() || mNodeID2ChildMap.at(currentNode->getID()).size() > 1) // if the parent node is a bifurcation point or the root node
+                    break;
+                currentNode = mNodeID2ChildMap.at(currentNode->getID()).front(); // move to the next node in the segment, which is the only child node of the current node since we break if there are more than 1 child nodes
+            }
+			segments.push_back(segment);
         }
-        reverse(segment.nodes.begin(), segment.nodes.end()); // reverse the segment so that the first node is the head and the last node is the tail
-        return segment;
+        return segments;
 	}
 
     void Neuron::populateSegmentMaps()

@@ -55,7 +55,7 @@ namespace nm
 			};
 
 			void populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
-			Segment buildSegmentFromNode(const Node& node); // Build a segment starting from the input node and ending at the next bifurcation point or end point
+			std::vector<Segment> buildSegmentFromNode(const Node& node); // Build a segment starting from the input node and ending at the next bifurcation point or end point
 			void writeSegmentsToSWC(const std::string& filePath) const;
 			std::vector<Segment> mSegments;
 
