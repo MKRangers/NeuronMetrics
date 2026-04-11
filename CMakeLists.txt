@@ -12,7 +12,6 @@ option(BUILD_CONSOLE "Build NeuronMetrics CON" ON)
 add_library(NeuronMetrics STATIC
     src/nmNeuron.cpp
     src/nmNode.cpp
-    src/nmSegment.cpp
     src/nmMouseCCF.cpp
     src/nmMetricsEngine.cpp
     src/nmAxonProjectionAnalyzer.cpp
@@ -20,7 +19,6 @@ add_library(NeuronMetrics STATIC
 
     include/foundation/nmNeuron.h
     include/foundation/nmNode.h
-    include/foundation/nmSegment.h
     include/foundation/nmMouseCCF.h
     include/foundation/nmExceptions.h
     include/foundation/nmAxonProjectionAnalyzer.h
