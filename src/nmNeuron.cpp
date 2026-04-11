@@ -202,6 +202,7 @@ namespace nm
                     break;
                 currentNode = mNodeID2ChildMap.at(currentNode->getID()).front(); // move to the next node in the segment, which is the only child node of the current node since we break if there are more than 1 child nodes
             }
+            segment.type = segment.nodes.back()->getType();
 			segments.push_back(segment);
         }
         return segments;

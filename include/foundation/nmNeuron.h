@@ -43,10 +43,12 @@ namespace nm
 			boost::container::flat_map<std::string, std::vector<const Node*>> mL_AxonTargetRegionNodeMap;
 			boost::container::flat_map<std::string, double>                   mL_AxonTargetRegionLengthMap;
 
-			// A segment is defined as a sequence of nodes between two bifurcation points or between a bifurcation point and an end point
+			//!
+			//! A segment is defined as a sequence of nodes between two bifurcation points or between a bifurcation point and an end point
 			struct Segment
 			{
-				int id; // segment ID, can be assigned in the order of segments being created				
+				int id; // segment ID, can be assigned in the order of segments being created
+				int type;
 				std::vector<Node*> nodes;	
 				Segment* parentSegment = nullptr; // the segment that this segment branches out from, null if this segment is the root segment
 				std::vector<Segment*> childSegments; // child segments that branch out from the end of this segment
