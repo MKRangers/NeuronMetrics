@@ -25,7 +25,7 @@ namespace nm
 			void					 scale(double scaleFactor);
 			std::string				 getNeuronName() const { return mName; }	
 			const std::vector<Node>& getNodes() const { return mNodes; }
-			int						 getNodesNum() const { return mNodes.size(); }
+			size_t				     getNodesNum() const { return mNodes.size(); }
 
 			void populateNodeMaps();  // Call this after mNodes is populated to fill the maps for quick access
 			std::unordered_map<int, const Node*> mNodeIDMap;                    // Node ID -> the ptr to the node in mNodes
@@ -66,7 +66,6 @@ namespace nm
 			void populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
 			std::vector<Segment> buildSegmentFromNode(const Node& node); // Build a segment starting from the input node and ending at the next bifurcation point or end point
 			void writeSegmentsToSWC(const std::string& filePath) const;
-			std::vector<Segment> mSegments;
 
 			void populateSegmentMaps(); // Call this after mSegments is populated to fill the maps for quick access
 			std::unordered_map<int, std::vector<Segment*>> mNodeID2SegmentMap; // Node ID -> the segment that starts from that node (i.e. the segment that has that node as its last node)
@@ -77,6 +76,7 @@ namespace nm
 			std::string mName;
 
 			std::vector<Node> mNodes; 
+			std::vector<Segment> mSegments;
 	};
 
 }

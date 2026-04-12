@@ -25,8 +25,8 @@ namespace nm
 		if (!tif)
 			throw runtime_error("Failed to open TIFF " + filePath);
 
-		uint32 w, h;
-		uint16 bitsPerSample, sampleFormat;
+		uint32_t w, h;
+		uint16_t bitsPerSample, sampleFormat;
 		// Read first slice to determine dimensions
 		TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
 		TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
@@ -49,7 +49,7 @@ namespace nm
 		mData.resize(mWidth * mHeight * mDepth); // allocate space for entire volume
 		for (int z = 0; z < mDepth; ++z)
 		{
-			for (uint32 row = 0; row < h; ++row)
+			for (uint32_t row = 0; row < h; ++row)
 			{
 				float* rowPtr = mData.data() + z * mWidth * mHeight + row * mWidth;
 				if (TIFFReadScanline(tif, rowPtr, row) < 0) // read scanline into correct position in mData

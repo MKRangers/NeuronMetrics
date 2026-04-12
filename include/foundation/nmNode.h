@@ -21,7 +21,7 @@ namespace nm
 			int	   getType() const { return type; }
 			int	   getParentID() const { return parentID; }
 			double getRadius() const { return radius; }
-			void   setParentID(int parentID) { this->parentID = parentID; }
+			void   setParentID(int parent_id) { this->parentID = parent_id; }
 			int    segID;
 
 
