@@ -138,6 +138,26 @@ namespace nm
         file.close();
     }
 
+    Neuron::Segment Neuron::Segment::split(size_t index)
+    {
+		// Split the segment into two segments at the specified index. 
+        // The original segment will keep the nodes from 0 to index - 1, and the new segment will have the nodes from index + 1 to the end of the original segment. 
+		// The new segment will be returned by this function and the index node will be dropped from both segments.
+        // The parent-child relationships of the segments will not be modified in this function, and should be handled separately after splitting if needed.
+
+        if (index >= nodes.size())
+        {
+            stringstream s("Index out of bounds for segment split. Index: " + to_string(index) + ", Segment size: " + to_string(nodes.size()));
+            throw SegmentSplitIndexOutOfBoundsException(s);
+        }
+
+        Segment newSegment;
+        newSegment.nodes.assign(nodes.begin() + index + 1, nodes.end());
+        nodes.erase(nodes.begin() + index - 1, nodes.end());
+        newSegment.type = newSegment.nodes.back()->getType();
+        return newSegment;
+	}
+
     void Neuron::populateSegments()
     {
         if (mNodes.empty())

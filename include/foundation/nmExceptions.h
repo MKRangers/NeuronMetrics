@@ -48,6 +48,12 @@ namespace nm
 			NeuronHasNoSegmentsException(const std::stringstream& msg) : NM_Exception(msg) {}
 	};
 
+	class SegmentSplitIndexOutOfBoundsException : public NM_Exception
+	{
+		public:
+			SegmentSplitIndexOutOfBoundsException(const std::stringstream& msg) : NM_Exception(msg) {}
+	};
+
 }
 
 #endif

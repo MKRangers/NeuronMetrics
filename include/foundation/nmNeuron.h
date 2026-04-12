@@ -47,8 +47,8 @@ namespace nm
 			//! A segment is defined as a sequence of nodes between two bifurcation points or between a bifurcation point and an end point
 			struct Segment
 			{
-				int id; // segment ID, can be assigned in the order of segments being created
-				int type;
+				int id = -1; // segment ID, can be assigned in the order of segments being created
+				int type = -1;
 				std::vector<Node*> nodes;	
 				Segment* parentSegment = nullptr; // the segment that this segment branches out from, null if this segment is the root segment
 				std::vector<Segment*> childSegments; // child segments that branch out from the end of this segment
@@ -60,7 +60,7 @@ namespace nm
 				void pop_back() { nodes.erase(nodes.begin()); }
 				void push_front(Node* node) { nodes.insert(nodes.begin(), node); }
 				void push_back(Node* node) { nodes.push_back(node); }
-				//Segment split(size_t index);
+				Segment split(size_t index);
 			};
 
 			void populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
