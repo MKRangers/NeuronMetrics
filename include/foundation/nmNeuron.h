@@ -53,19 +53,20 @@ namespace nm
 				Segment* parentSegment = nullptr; // the segment that this segment branches out from, null if this segment is the root segment
 				std::vector<Segment*> childSegments; // child segments that branch out from the end of this segment
 				
+				bool empty() const { return nodes.empty(); }
 				Node* operator[](size_t index) { return nodes[index]; }
 				Node* front() { return nodes.front(); }
 				Node* back() { return nodes.back(); }
-				void pop_front() { nodes.pop_back(); }
-				void pop_back() { nodes.erase(nodes.begin()); }
+				void pop_front() { nodes.erase(nodes.begin()); }
+				void pop_back() { nodes.pop_back(); }
 				void push_front(Node* node) { nodes.insert(nodes.begin(), node); }
 				void push_back(Node* node) { nodes.push_back(node); }
 				Segment split(size_t index);
 			};
 
-			void populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
-			std::vector<Segment> buildSegmentFromNode(const Node& node); // Build a segment starting from the input node and ending at the next bifurcation point or end point
-			void writeSegmentsToSWC(const std::string& filePath) const;
+			void						populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
+			const std::vector<Segment>& getSegments() const { return mSegments; }
+			void						writeSegmentsToSWC(const std::string& filePath) const;
 
 			void populateSegmentMaps(); // Call this after mSegments is populated to fill the maps for quick access
 			std::unordered_map<int, std::vector<Segment*>> mNodeID2SegmentMap; // Node ID -> the segment that starts from that node (i.e. the segment that has that node as its last node)
@@ -77,7 +78,11 @@ namespace nm
 
 			std::vector<Node> mNodes; 
 			std::vector<Segment> mSegments;
+
+			std::vector<Segment> buildSegmentFromNode(const Node& node); // Build a segment starting from the input node and ending at the next bifurcation point or end point
 	};
+
+	using NeuronSP = std::shared_ptr<Neuron>;
 
 }
 
