@@ -158,7 +158,7 @@ namespace nm
         return newSegment;
 	}
 
-    void Neuron::populateSegments()
+    void Neuron::populateSegments(bool hierarchy)
     {
         if (mNodes.empty())
         {
@@ -184,25 +184,29 @@ namespace nm
             }
         }
 
-        // Set parent and child segments
         populateSegmentMaps();
-        for (Segment& segment : mSegments)
+
+        if (hierarchy)
         {
-			const Node* headNode = segment.nodes.front();
-            if (headNode->getParentID() != -1)
+            // Set parent and child segments
+            for (Segment& segment : mSegments)
             {
-				vector<Segment*> segmentsSharingSameNode = mNodeID2SegmentMap.at(headNode->getID());
-                for (Segment* candidateParentSegment : segmentsSharingSameNode)
+                const Node* headNode = segment.nodes.front();
+                if (headNode->getParentID() != -1)
                 {
-                    if (candidateParentSegment->nodes.back()->getID() == headNode->getID())
+                    vector<Segment*> segmentsSharingSameNode = mNodeID2SegmentMap.at(headNode->getID());
+                    for (Segment* candidateParentSegment : segmentsSharingSameNode)
                     {
-                        segment.parentSegment = candidateParentSegment;
-                        candidateParentSegment->childSegments.push_back(&segment);
-                        break;
+                        if (candidateParentSegment->nodes.back()->getID() == headNode->getID())
+                        {
+                            segment.parentSegment = candidateParentSegment;
+                            candidateParentSegment->childSegments.push_back(&segment);
+                            break;
+                        }
                     }
-				}
+                }
             }
-		}
+        }
     }
 
     vector<Neuron::Segment> Neuron::buildSegmentFromNode(const Node& node)

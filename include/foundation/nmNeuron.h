@@ -64,7 +64,7 @@ namespace nm
 				Segment split(size_t index);
 			};
 
-			void						populateSegments(); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
+			void						populateSegments(bool hierarchy = false); // Call this after mNodes is populated to fill mSegments based on root nodes, bifurcations, and end points in the neurons
 			const std::vector<Segment>& getSegments() const { return mSegments; }
 			void						writeSegmentsToSWC(const std::string& filePath) const;
 
