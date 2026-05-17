@@ -83,6 +83,7 @@ namespace nm
 	};
 
 	using NeuronSP = std::shared_ptr<Neuron>;
+	using SegmentSP = std::shared_ptr<Neuron::Segment>;
 
 }
 
