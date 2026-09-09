@@ -50,6 +50,8 @@ namespace nm
 			populateAxonTargetRegionMaps(neuron);
 			populateAxonTargetRegionLengths(neuron);
 
+			// Needs to lock the mutex when writing to the shared report maps to avoid data races
+			// Use lock_guard to automatically release the lock when the scope ends
 			lock_guard<mutex> lock(mReportMutex);
 			for (auto& taRegion : neuron.mAxonTargetRegionLengthMap)
 				mTargetReport[neuron.getNeuronName()][taRegion.first] = taRegion.second;
