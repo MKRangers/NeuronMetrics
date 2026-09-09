@@ -223,7 +223,7 @@ Future development will focus on expanding analytical capabilities and improving
 If you use NeuronMetrics in academic research that results in a publication, please cite:
 
 NeuronMetrics: A C++ framework for axon projection analysis.
-GitHub: https://github.com/yourname/NeuronMetrics
+GitHub: https://github.com/MKRangers/NeuronMetrics
 
 Citation is not legally required but is greatly appreciated.
 
